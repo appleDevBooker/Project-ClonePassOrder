@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class StoryTableViewCell: UITableViewCell {
+final class StoryTableViewCell: UITableViewCell {
 
     // MARK: - UI Properties
 

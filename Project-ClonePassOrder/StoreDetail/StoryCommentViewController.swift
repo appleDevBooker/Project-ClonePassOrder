@@ -8,20 +8,20 @@
 import UIKit
 import SnapKit
 
-class StoryCommentViewController: UIViewController {
+final class StoryCommentViewController: UIViewController {
 
     // MARK: - UI Properties
 
-    let commentTableView: UITableView = {
+    private let commentTableView: UITableView = {
         let tableView = UITableView()
         return tableView
     }()
-    let floatingView: UIView = {
+    private let floatingView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         return view
     }()
-    let commentTextField: UITextField = {
+    private let commentTextField: UITextField = {
         let textField = UITextField()
         textField.layer.masksToBounds = true
         textField.layer.cornerRadius = 20
@@ -31,7 +31,7 @@ class StoryCommentViewController: UIViewController {
         textField.addLeftPadding()
         return textField
     }()
-    let commentWriteCompletButton: UIButton = {
+    private let commentWriteCompletButton: UIButton = {
         let button = UIButton()
         button.setTitle("확인", for: .normal)
         button.setTitleColor(.gray, for: .normal)
@@ -136,16 +136,16 @@ class StoryCommentViewController: UIViewController {
         
         present(alert, animated: true)
     }
-    @objc func viewTapped(sender: UITapGestureRecognizer) {
+    @objc private func viewTapped(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             view.endEditing(true)
         }
         sender.cancelsTouchesInView = false
     }
-    @objc func keyboardWillShow(_ sender: Notification) {
+    @objc private func keyboardWillShow(_ sender: Notification) {
         self.view.frame.origin.y = -300
     }
-    @objc func keyboardWillHide(_ sender: Notification) {
+    @objc private func keyboardWillHide(_ sender: Notification) {
         self.view.frame.origin.y = 0
     }
 }

@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
+final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
 
     // MARK: - UI Properties
 
@@ -50,7 +50,7 @@ class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
         button.addTarget(self, action: #selector(moveStoryButtonTapped), for: .touchUpInside)
         return button
     }()
-    lazy var informationStoryButtonStackView: UIStackView = {
+    private lazy var informationStoryButtonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [informationButton, storyButton])
         stackView.axis = .horizontal
         stackView.alignment = .center

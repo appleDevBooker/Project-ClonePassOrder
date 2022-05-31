@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class StoreDetailInfoTableViewCell: UITableViewCell {
+final class StoreDetailInfoTableViewCell: UITableViewCell {
 
     // MARK: - UI Properties
 

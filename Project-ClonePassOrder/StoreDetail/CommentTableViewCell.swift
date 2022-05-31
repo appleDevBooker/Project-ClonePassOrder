@@ -8,29 +8,29 @@
 import UIKit
 import SnapKit
 
-class CommentTableViewCell: UITableViewCell {
+final class CommentTableViewCell: UITableViewCell {
 
     // MARK: - UI Properties
 
-    let commentView: UIView = {
+    private let commentView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
         view.layer.cornerRadius = 10
         return view
     }()
-    let writerProfileImageView: UIImageView = {
+    private let writerProfileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .blue
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 20
         return imageView
     }()
-    let writerNameLabel: UILabel = {
+    private let writerNameLabel: UILabel = {
         let label = UILabel()
         label.text = "작성자"
         return label
     }()
-    let commentLabel: UILabel = {
+    private let commentLabel: UILabel = {
         let label = UILabel()
         label.text = """
                          여기 진짜 괜찮은거에요?
@@ -40,7 +40,7 @@ class CommentTableViewCell: UITableViewCell {
         label.numberOfLines = 0
         return label
     }()
-    let writtenTimeLabel: UILabel = {
+    private let writtenTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "2022.05.13"
         label.textColor = .systemGray
@@ -51,14 +51,14 @@ class CommentTableViewCell: UITableViewCell {
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         return button
     }()
-    lazy var bottomAreaStackView: UIStackView = {
+    private lazy var bottomAreaStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [writtenTimeLabel, moreButton])
         stackView.axis = .horizontal
         stackView.alignment = .fill
         stackView.distribution = .fill
         return stackView
     }()
-    lazy var labelsStackView: UIStackView = {
+    private lazy var labelsStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [writerNameLabel, commentLabel, bottomAreaStackView])
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -66,7 +66,7 @@ class CommentTableViewCell: UITableViewCell {
         stackView.distribution = .fill
         return stackView
     }()
-    lazy var contentsStackView: UIStackView = {
+    private lazy var contentsStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [writerProfileImageView, labelsStackView])
         stackView.axis = .horizontal
         stackView.spacing = 10

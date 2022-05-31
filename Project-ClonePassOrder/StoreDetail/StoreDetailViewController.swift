@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class StoreDetailViewController: UIViewController {
+final class StoreDetailViewController: UIViewController {
     enum SelectedView {
         case infoView
         case storyView
@@ -16,7 +16,7 @@ class StoreDetailViewController: UIViewController {
 
     // MARK: - Properties
 
-    var currentSelectedView: SelectedView = .infoView
+    private var currentSelectedView: SelectedView = .infoView
 
     // MARK: - UI Properties
 
@@ -81,10 +81,10 @@ class StoreDetailViewController: UIViewController {
 
     // MARK: - Methods
 
-    func reloadstoreDetailTableView() {
+    private func reloadstoreDetailTableView() {
         storeDetailTableView.reloadData()
     }
-    @objc func informationButtonTapped() {
+    @objc private func informationButtonTapped() {
         switch currentSelectedView {
             case .infoView:
                 return
@@ -93,7 +93,7 @@ class StoreDetailViewController: UIViewController {
                 reloadstoreDetailTableView()
         }
     }
-    @objc func storyButtonTapped() {
+    @objc private func storyButtonTapped() {
         switch currentSelectedView {
             case .infoView:
                 currentSelectedView = .storyView
@@ -102,7 +102,7 @@ class StoreDetailViewController: UIViewController {
                 return
         }
     }
-    @objc func moreButtonTapped() {
+    @objc private func moreButtonTapped() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "신고", style: .default))
         alert.addAction(UIAlertAction(title: "삭제", style: .destructive))
@@ -110,7 +110,7 @@ class StoreDetailViewController: UIViewController {
         
         present(alert, animated: true)
     }
-    @objc func commentsButtonTapped() {
+    @objc private func commentsButtonTapped() {
         let nextViewController = UINavigationController(rootViewController: StoryCommentViewController())
         nextViewController.modalPresentationStyle = .fullScreen
         present(nextViewController, animated: true)
