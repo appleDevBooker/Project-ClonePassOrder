@@ -57,11 +57,6 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
         stackView.distribution = .fillEqually
         return stackView
     }()
-    private let seperator: UIView = {
-        let view = UIView()
-        view.backgroundColor = .lightGray
-        return view
-    }()
     private let presentingSelectedButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -73,6 +68,7 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         setLayout()
+        informationButtonTapped()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -87,7 +83,6 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
         contentView.addSubview(storeNameLabel)
         contentView.addSubview(storeDescription)
         contentView.addSubview(informationStoryButtonStackView)
-        contentView.addSubview(seperator)
         contentView.addSubview(presentingSelectedButtonView)
         contentView.bringSubviewToFront(presentingSelectedButtonView)
         
@@ -108,13 +103,6 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(storeDescription.snp.bottom).offset(40)
             make.leading.trailing.equalToSuperview().inset(20)
         }
-        presentingSelectedButtonView.snp.makeConstraints { make in
-            make.top.equalTo(informationStoryButtonStackView.snp.bottom).offset(20)
-            make.width.equalTo(100)
-            make.height.equalTo(1)
-            make.bottom.equalTo(contentView.snp.bottom)
-            make.centerX.equalTo(informationButton)
-        }
     }
 
     // MARK: - Methods
@@ -124,7 +112,7 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(informationStoryButtonStackView.snp.bottom).offset(20)
             make.width.equalTo(100)
             make.height.equalTo(1)
-            make.bottom.equalTo(contentView.snp.bottom)
+            make.bottom.lessThanOrEqualTo(contentView.snp.bottom).priority(200)
             make.centerX.equalTo(storyButton)
         }
         storyButton.isEnabled = false
@@ -137,7 +125,7 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(informationStoryButtonStackView.snp.bottom).offset(20)
             make.width.equalTo(100)
             make.height.equalTo(1)
-            make.bottom.equalTo(contentView.snp.bottom)
+            make.bottom.lessThanOrEqualTo(contentView.snp.bottom).priority(200)
             make.centerX.equalTo(informationButton)
         }
         informationButton.isEnabled = false
