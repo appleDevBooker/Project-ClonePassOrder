@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,11 +17,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else {
             return
         }
-        window = UIWindow(windowScene: scene)
-        let navi = UINavigationController(rootViewController: LoginViewController())
-        window?.rootViewController = navi
-        window?.makeKeyAndVisible()
+        if ProcessInfo.processInfo.arguments.contains("LoginAndSignUpUITesting") {
+            Auth.auth().settings?.isAppVerificationDisabledForTesting = true
+            window = UIWindow(windowScene: scene)
+            let vc = UINavigationController(rootViewController: LoginViewController())
+            self.window?.rootViewController = vc
+            window?.makeKeyAndVisible()
+            AppDelegate.shared.window = window
+        } else {
+            window = UIWindow(windowScene: scene)
+            let vc = TabBarController()
+            self.window?.rootViewController = vc
+            window?.makeKeyAndVisible()
+            AppDelegate.shared.window = window
+        }
     }
+    
+      
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

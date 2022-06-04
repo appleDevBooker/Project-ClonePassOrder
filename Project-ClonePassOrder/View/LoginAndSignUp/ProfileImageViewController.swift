@@ -1,0 +1,107 @@
+//
+//  ProfileImageViewController.swift
+//  Project-ClonePassOrder
+//
+//  Created by 정덕호 on 2022/05/31.
+//
+
+import Foundation
+
+import UIKit
+import SVProgressHUD
+
+class ProfileImageViewController: UIViewController {
+
+    //MARK: - 프로퍼티
+    
+    private let welcomeView: UIView = UIView().welcomeView()
+    private let label: UILabel = {
+        let lb = UILabel()
+        lb.text = "프로필 이미지를 추가해주세요!"
+        lb.textColor = .black
+        lb.font = .systemFont(ofSize: 20)
+        return lb
+    }()
+    private let addPhotoButton: UIButton = {
+        let bt = UIButton(type: .system)
+        bt.setImage(UIImage(named: "이미지추가버튼이미지"), for: .normal)
+        bt.tintColor = .black
+        bt.layer.cornerRadius = bt.frame.width / 2
+        bt.layer.masksToBounds = true
+        bt.layer.borderColor = UIColor.white.cgColor
+        bt.layer.borderWidth = 2
+        return bt
+    }()
+    private let nextButton: UIButton = UIButton().nextButton()
+    
+    //MARK: - 라이프사이클
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setLayout()
+        setAtrribute()
+        naviSetAttribute()
+    }
+    
+    //MARK: - 셀렉터메서드
+    @objc private func nextButtonTapped() {
+        if SignUpViewModel.shared.profileImageData != nil {
+            navigationController?.pushViewController(SignUpViewController(), animated: true)
+        } else {
+            Toast.message(superView: view, text: "이미지를 등록해주세요")
+        }
+    }
+    @objc private func addPhotoButtonTapped() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
+    }
+    
+    //MARK: - 메서드
+    
+    private func setLayout() {
+        [welcomeView,label,addPhotoButton,nextButton].forEach {
+            view.addSubview($0)
+        }
+        welcomViewSetLayout(view: view, welcomeView: welcomeView)
+        label.snp.makeConstraints { make in
+            make.top.equalTo(welcomeView.snp.bottom).offset(100)
+            make.centerX.equalToSuperview()
+        }
+        addPhotoButton.snp.makeConstraints { make in
+            make.top.equalTo(label.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(200)
+        }
+        nextButtonSetLayout(view: view, button: nextButton, topView: addPhotoButton)
+    }
+    private func setAtrribute() {
+        view.backgroundColor = .systemBackground
+        nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        addPhotoButton.addTarget(self, action: #selector(addPhotoButtonTapped), for: .touchUpInside)
+    }
+    private func naviSetAttribute() {
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.tintColor = .black
+    }
+}
+
+//MARK: - 이미지 픽커 델리게이트
+extension ProfileImageViewController:
+    UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+    func imagePickerController(
+        _ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+    ) {
+        guard let selectedImage = info[.editedImage] as? UIImage else {return}
+        SignUpViewModel.shared.profileImageConrvertData(image: selectedImage)
+        addPhotoButton.layer.cornerRadius = addPhotoButton.frame.width / 2
+        addPhotoButton.layer.masksToBounds = true
+        addPhotoButton.layer.borderColor = UIColor.white.cgColor
+        addPhotoButton.layer.borderWidth = 2
+        addPhotoButton.setImage(selectedImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        self.dismiss(animated: true, completion: nil)
+    }
+}

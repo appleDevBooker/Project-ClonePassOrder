@@ -79,3 +79,16 @@ extension UICollectionViewCell {
         }
     }
 }
+
+extension CAGradientLayer {
+    func imageViewGradaient(imageView: UIImageView, bounds: CGRect) {
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
+        gradient.startPoint = CGPoint(x: 1, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 1)
+        gradient.frame = bounds
+        gradient.opacity = 0.2
+        imageView.layer.addSublayer(gradient)
+    }
+}
+
