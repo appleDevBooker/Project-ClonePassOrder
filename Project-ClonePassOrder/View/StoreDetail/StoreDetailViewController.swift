@@ -152,6 +152,7 @@ extension StoreDetailViewController: UITableViewDelegate, UITableViewDataSource 
                     return UITableViewCell()
                 }
                 cell.selectionStyle = .none
+                cell.viewModel = viewModel
                 return cell
             case .storyView:
                 let dequedCell = tableView.dequeueReusableCell(withIdentifier: "storycell")
@@ -169,6 +170,7 @@ extension StoreDetailViewController: UITableViewDelegate, UITableViewDataSource 
         guard let headerView = dequedHeaderView as? StoreDetailTableViewHeaderView else {
             return UIView()
         }
+        headerView.viewModel = viewModel
         headerView.informationButton.addTarget(self, action: #selector(informationButtonTapped), for: .touchUpInside)
         headerView.storyButton.addTarget(self, action: #selector(storyButtonTapped), for: .touchUpInside)
         return headerView

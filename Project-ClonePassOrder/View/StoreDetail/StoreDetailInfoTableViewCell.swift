@@ -10,12 +10,20 @@ import SnapKit
 
 final class StoreDetailInfoTableViewCell: UITableViewCell {
 
+    // MARK: - Properties
+
+    var viewModel: CafeViewModelItem? {
+        didSet {
+            setAttributes()
+        }
+    }
+
     // MARK: - UI Properties
 
     private let couponeLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .systemGray6
-        label.text = "9개만 더 모으면 쿠폰으로 사용 가능해요 ❗️"
+        label.text = "10개만 더 모으면 쿠폰으로 사용 가능해요 ❗️"
         label.font = .boldSystemFont(ofSize: 16)
         label.clipsToBounds = true
         label.layer.cornerRadius = 10
@@ -150,6 +158,7 @@ final class StoreDetailInfoTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setLayout()
+        setAttributes()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -197,5 +206,15 @@ final class StoreDetailInfoTableViewCell: UITableViewCell {
             make.height.equalTo(300)
             make.bottom.equalToSuperview()
         }
+    }
+
+    // MARK: - setAttributes
+
+    private func setAttributes() {
+        storeBenefitsValueLabel.text = viewModel?.benefit
+        businessHoursValueLabel.text = viewModel?.openTime
+        holidayValueLabel.text = viewModel?.offDay
+        telNumberValueLabel.text = viewModel?.phoneNumber
+        addressValueLabel.text = viewModel?.address
     }
 }

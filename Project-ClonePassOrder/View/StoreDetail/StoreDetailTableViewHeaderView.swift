@@ -10,6 +10,14 @@ import SnapKit
 
 final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
 
+    // MARK: - Properties
+
+    var viewModel: CafeViewModelItem? {
+        didSet {
+            setAttributes()
+        }
+    }
+
     // MARK: - UI Properties
 
     private let storeImageView: UIImageView = {
@@ -69,6 +77,7 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
         super.init(reuseIdentifier: reuseIdentifier)
         setLayout()
         informationButtonTapped()
+        setAttributes()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -103,6 +112,14 @@ final class StoreDetailTableViewHeaderView: UITableViewHeaderFooterView {
             make.top.equalTo(storeDescription.snp.bottom).offset(40)
             make.leading.trailing.equalToSuperview().inset(20)
         }
+    }
+
+    // MARK: - setAttributes
+
+    private func setAttributes() {
+        storeImageView.image = viewModel?.cellImage
+        storeNameLabel.text = viewModel?.name
+        storeDescription.text = viewModel?.info
     }
 
     // MARK: - Methods
