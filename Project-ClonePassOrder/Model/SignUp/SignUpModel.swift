@@ -8,15 +8,37 @@
 import Foundation
 
 struct SignUpModel {
-    let email: String
-    let password: String
-    let phoneNumber: String
-    let profileImageURL: String
-    let userName: String
-    let is14YearsOld: Bool
-    let isAgreeService: Bool
-    let isAgreeLocationService: Bool
-    let isAgreePrivacyInformation: Bool
-    let isAgreePrivacyThirdPartyInformation: Bool
-    let isAgreeMarketingReceive: Bool
+    var email: String
+    var password: String
+    var confirmPssword: String
+    var phoneNumber: String
+    var verificationCode: String
+    var profileImageURL: String
+    var userName: String
+    var is14YearsOld: Bool
+    var isAgreeService: Bool
+    var isAgreeLocationService: Bool
+    var isAgreePrivacyInformation: Bool
+    var isAgreePrivacyThirdPartyInformation: Bool
+    var isAgreeMarketingReceive: Bool
+    
+    var imageData: Data?
+}
+
+extension SignUpModel {
+    static let EMPTY = SignUpModel(
+        email: "",
+        password: "",
+        confirmPssword: "",
+        phoneNumber: "",
+        verificationCode: "",
+        profileImageURL: "",
+        userName: "",
+        is14YearsOld: false,
+        isAgreeService: false,
+        isAgreeLocationService: false,
+        isAgreePrivacyInformation: false,
+        isAgreePrivacyThirdPartyInformation: false,
+        isAgreeMarketingReceive: false
+    )
 }

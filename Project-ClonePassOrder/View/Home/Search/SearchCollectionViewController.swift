@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class SearchCollectionViewController: UICollectionViewController {
 
@@ -35,7 +36,7 @@ class SearchCollectionViewController: UICollectionViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.viewModel.items.value = viewModel.orderNearStore()
+        self.viewModel.items.value = viewModel.orderNearStore(coodinate: CLLocation.coordinate())
         setNotification()
         setAtrribute()
         naviSetAttribute()

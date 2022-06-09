@@ -27,31 +27,33 @@ enum AuthError: Error {
 protocol AuthServiceProtocol {
     func login(
         model: AuthModel,
-        completion: @escaping (Result<String, AuthError>) -> Void
+        completion: @escaping (Result<Void, AuthError>) -> Void
     )
     func logout(completion: @escaping (Result<Void, AuthError>) -> Void) throws
 }
 
 struct AuthService: AuthServiceProtocol {
+    let auth = Auth.auth()
     func login(
         model: AuthModel,
-        completion: @escaping (Result<String, AuthError>) -> Void
+        completion: @escaping (Result<Void, AuthError>) -> Void
     ) {
-        Auth.auth().signIn(withEmail: model.email, password: model.password) { authResult, error in
+        auth.signIn(withEmail: model.email, password: model.password) { authResult, error in
             if error != nil {
                 completion(.failure(.loginFaildError))
             } else {
-                guard let result = authResult else {
+                if authResult == nil {
                     completion(.failure(.authResultNilError))
                     return
+                } else {
+                    completion(.success(()))
                 }
-                completion(.success(result.user.uid))
             }
         }
     }
     func logout(completion: @escaping (Result<Void, AuthError>) -> Void) throws {
         do {
-            try Auth.auth().signOut()
+            try auth.signOut()
             completion(.success(()))
         } catch {
             completion(.failure(.logoutFaildError))

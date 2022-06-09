@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class SortCell: UICollectionViewCell {
     
@@ -15,7 +16,7 @@ class SortCell: UICollectionViewCell {
     
     //MARK: - 프로퍼티
     
-    var viewModel: CafeViewModelItem? {
+    var viewModel: CafeListViewModelItem? {
         didSet {
             setAtrribute()
         }
@@ -122,10 +123,13 @@ class SortCell: UICollectionViewCell {
         guard let viewModel = viewModel else {
             return
         }
+        guard let imageData = viewModel.cellImageData else {
+            return
+        }
         nameLabel.text = viewModel.name
         timeLabel.text = viewModel.orderTime
-        distanceLabel.text = viewModel.distanceString
-        imageView.image = viewModel.cellImage
+        distanceLabel.text = viewModel.distanceString(coordinate: CLLocation.coordinate())
+        imageView.image = UIImage(data: imageData)
         storyLabel.text = "\(viewModel.storyCount)"
         likeLabel.text = "\(viewModel.favoriteCount)"
     }

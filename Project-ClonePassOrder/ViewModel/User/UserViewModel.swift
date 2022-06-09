@@ -18,6 +18,7 @@ final class UserViewModel {
     var userService: UserServiceProtocol
     var model: Observer<UserModel> = Observer(value: UserModel.EMPTY)
     var userServiceError: Observer<UserServiceError> = Observer(value: .snapShotError)
+    
     var userName: String {
         return model.value.userName
     }
@@ -29,8 +30,8 @@ final class UserViewModel {
 
 extension UserViewModel {
     
-    func userFetch(uid: String) {
-        userService.fetch(uid: uid) { [weak self] result in
+    func userFetch() {
+        userService.fetch() { [weak self] result in
             switch result {
             case .success(let model):
                 self?.model.value = model
@@ -38,8 +39,5 @@ extension UserViewModel {
                 self?.userServiceError.value = error
             }
         }
-    }
-    func userServiceErrorString() -> String {
-       return "앱종료후 다시 실행해주세요"
     }
 }

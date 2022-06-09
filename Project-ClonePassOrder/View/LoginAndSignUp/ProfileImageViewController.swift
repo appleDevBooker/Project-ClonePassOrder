@@ -42,14 +42,14 @@ class ProfileImageViewController: UIViewController {
         setAtrribute()
         naviSetAttribute()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setBinding()
+    }
     
     //MARK: - 셀렉터메서드
     @objc private func nextButtonTapped() {
-        if SignUpViewModel.shared.profileImageData != nil {
-            navigationController?.pushViewController(SignUpViewController(), animated: true)
-        } else {
-            Toast.message(superView: view, text: "이미지를 등록해주세요")
-        }
+        SignUpViewModel.shared.isProfileImageEmpty()
     }
     @objc private func addPhotoButtonTapped() {
         let picker = UIImagePickerController()
@@ -86,6 +86,15 @@ class ProfileImageViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = .black
     }
+    private func setBinding() {
+        SignUpViewModel.shared.signupCheck.bind { [weak self] signupCheck in
+            if signupCheck == .success {
+                self?.navigationController?.pushViewController(UserNameSignupViewController(), animated: true)
+            } else {
+                Toast.message(superView: self!.view, text: signupCheck.message)
+            }
+        }
+    }
 }
 
 //MARK: - 이미지 픽커 델리게이트
@@ -95,8 +104,13 @@ extension ProfileImageViewController:
         _ picker: UIImagePickerController,
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
     ) {
-        guard let selectedImage = info[.editedImage] as? UIImage else {return}
-        SignUpViewModel.shared.profileImageConrvertData(image: selectedImage)
+        guard let selectedImage = info[.editedImage] as? UIImage else {
+            return
+        }
+        guard let imageData = selectedImage.jpegData(compressionQuality: 0.7) else {
+            return
+        }
+        SignUpViewModel.shared.model.imageData = imageData
         addPhotoButton.layer.cornerRadius = addPhotoButton.frame.width / 2
         addPhotoButton.layer.masksToBounds = true
         addPhotoButton.layer.borderColor = UIColor.white.cgColor

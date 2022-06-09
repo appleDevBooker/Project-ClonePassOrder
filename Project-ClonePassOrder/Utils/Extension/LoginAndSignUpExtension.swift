@@ -121,7 +121,11 @@ extension UIImageView {
 }
 
 extension UITextField {
-    func loginTextField(height: Double = 0.8, returnKey: UIReturnKeyType) -> UITextField {
+    func loginTextField(
+        height: Double = 0.8,
+        returnKey: UIReturnKeyType,
+        serureTextEntry: Bool
+    ) -> UITextField {
         let tf = UITextField()
         tf.returnKeyType = returnKey
          tf.snp.makeConstraints { make in
@@ -136,10 +140,16 @@ extension UITextField {
          sv.snp.makeConstraints { make in
              make.leading.trailing.bottom.equalTo(tf)
          }
+        tf.isSecureTextEntry = serureTextEntry
+        tf.autocapitalizationType = .none
          return tf
     }
     func signUpTextField(text: String, placeholder: String) -> UITextField {
-        let textField = UITextField().loginTextField(height: 2, returnKey: .next)
+        let textField = UITextField().loginTextField(
+            height: 2,
+            returnKey: .next,
+            serureTextEntry: false
+        )
         let label = UILabel()
         label.text = text
         label.textColor = .black

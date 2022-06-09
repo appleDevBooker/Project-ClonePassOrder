@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 extension UIView {
     func addShadow() {
@@ -17,5 +18,14 @@ extension UIView {
     func getLabelHeight(_ yourLabel : UILabel) -> CGFloat {
         var height = ("1" as! NSString).size(withAttributes: [NSAttributedString.Key.font : yourLabel.font]).height
         return height
+    }
+}
+
+extension CLLocation {
+   static func coordinate() -> CLLocation {
+        guard let coordinate2D = CLLocationManager().location?.coordinate else {
+            return CLLocation(latitude: 0, longitude: 0)
+        }
+        return CLLocation(latitude: coordinate2D.latitude, longitude: coordinate2D.longitude)
     }
 }

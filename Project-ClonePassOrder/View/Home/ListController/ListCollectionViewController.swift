@@ -7,10 +7,10 @@
 
 
 import UIKit
+import CoreLocation
 
 protocol ListCollectionViewDelegate: AnyObject {
     func footerTapped(title: String)
-    func cellImageloadEnd()
     func cellTapped(controller: StoreDetailViewController)
 }
 
@@ -21,7 +21,6 @@ class ListCollectionViewController: UICollectionViewController {
     var firstADListViewModel: ADListViewModel
     var secondADListViewModel: ADListViewModel
     weak var delegate: ListCollectionViewDelegate?
-    var cellImageView: [UIImageView] = []
     
     //MARK: - 라이프사이클
     
@@ -239,20 +238,19 @@ class ListCollectionViewController: UICollectionViewController {
         var count = 0
         self.cafeViewModel.items.value.forEach { item in
             let imageView = UIImageView()
-            imageView.kf.setImage(with: item.cafeImageURL, options: [.forceRefresh]) { result in
+            imageView.kf.setImage(with: item.cafeImageURL, options: [.forceRefresh]) { [weak self] result in
                 switch result {
                 case .success(_):
-                    item.cellImage = imageView.image
-                    self.delegate?.cellImageloadEnd()
                     count += 1
-                    if count == self.cafeViewModel.count() {
-                        self.collectionView.reloadData()
+                    item.cellImageData = imageView.image?.pngData()
+                    self!.cafeViewModel.imageSuccess.value = true
+                    if count == self?.cafeViewModel.count() {
+                        self!.collectionView.reloadData()
                     }
                 case .failure(_):
                     break
                 }
             }
-            cellImageView.append(imageView)
         }
     }
     //MARK: - 컬렉션뷰 데이터소스
@@ -264,9 +262,9 @@ class ListCollectionViewController: UICollectionViewController {
         switch section {
         case 0: return 1
         case 1: return 1
-        case 2: return cafeViewModel.orderNearStore().count
+        case 2: return cafeViewModel.orderNearStore(coodinate: CLLocation.coordinate()).count
         case 3: return cafeViewModel.orderManyStoryStore().count
-        case 4: return cafeViewModel.orderNewStore().count
+        case 4: return cafeViewModel.orderNewStore(coodinate: CLLocation.coordinate()).count
         case 5: return 1
         default: return 10
         }
@@ -281,7 +279,6 @@ class ListCollectionViewController: UICollectionViewController {
                 withReuseIdentifier: FirstADCell.identifier,
                 for: indexPath
             ) as! FirstADCell
-            cell.delegate = self
             cell.viewModel = firstADListViewModel
             return cell
         case 1:
@@ -289,7 +286,6 @@ class ListCollectionViewController: UICollectionViewController {
                 withReuseIdentifier: SecondADCell.identifier,
                 for: indexPath
             ) as! SecondADCell
-            cell.delegate = self
             cell.viewModel = secondADListViewModel
             return cell
         case 2:
@@ -297,7 +293,7 @@ class ListCollectionViewController: UICollectionViewController {
                 withReuseIdentifier: FirstListCell.identifier,
                 for: indexPath
             ) as! FirstListCell
-            cell.viewModel = cafeViewModel.orderNearStore()[indexPath.row]
+            cell.viewModel = cafeViewModel.orderNearStore(coodinate: CLLocation.coordinate())[indexPath.row]
             return cell
         case 3:
             let cell = collectionView.dequeueReusableCell(
@@ -311,7 +307,7 @@ class ListCollectionViewController: UICollectionViewController {
                 withReuseIdentifier: ThirdListCell.identifier,
                 for: indexPath
             ) as! ThirdListCell
-            cell.viewModel = cafeViewModel.orderNewStore()[indexPath.row]
+            cell.viewModel = cafeViewModel.orderNewStore(coodinate: CLLocation.coordinate())[indexPath.row]
             return cell
         case 5:
             let cell = collectionView.dequeueReusableCell(
@@ -401,7 +397,7 @@ class ListCollectionViewController: UICollectionViewController {
         switch indexPath.section {
         case 2:
             let vc = StoreDetailViewController(
-                viewModel: cafeViewModel.orderNearStore()[indexPath.row]
+                viewModel: cafeViewModel.orderNearStore(coodinate: CLLocation.coordinate())[indexPath.row]
             )
             delegate?.cellTapped(controller: vc)
         case 3:
@@ -411,7 +407,7 @@ class ListCollectionViewController: UICollectionViewController {
             delegate?.cellTapped(controller: vc)
         case 4:
             let vc = StoreDetailViewController(
-                viewModel: cafeViewModel.orderNearStore()[indexPath.row]
+                viewModel: cafeViewModel.orderNearStore(coodinate: CLLocation.coordinate())[indexPath.row]
             )
             delegate?.cellTapped(controller: vc)
         default:
@@ -428,8 +424,4 @@ extension ListCollectionViewController: ListCellDelegate {
     }
 }
 
-extension ListCollectionViewController: ListViewCellDelegate {
-    func imageLoadEnd() {
-        delegate?.cellImageloadEnd()
-    }
-}
+

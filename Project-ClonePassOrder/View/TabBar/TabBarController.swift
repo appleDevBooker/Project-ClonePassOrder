@@ -8,15 +8,12 @@
 import UIKit
 import Firebase
 import CoreLocation
-import SwiftUI
 
 class TabBarController: UITabBarController {
     
     //MARK: - 프로퍼티
     private var locationManger = CLLocationManager()
-    private lazy var cafeListViewModel: CafeListViewModel = CafeListViewModel(
-        corrdinate: locationManger.location!.coordinate
-    )
+    private lazy var cafeListViewModel: CafeListViewModel = CafeListViewModel()
     private var firstADListViewModel: ADListViewModel = ADListViewModel()
     private var secondADListViewModel: ADListViewModel = ADListViewModel()
     private let indicatorView: UIImageView = UIImageView().indicatorView()
@@ -110,7 +107,7 @@ class TabBarController: UITabBarController {
         }
         UserViewModel.shared.userServiceError.bind { [weak self] error in
             Toast.message(superView: self!.view, text: "서버연결에 실패했습니다 인터넷 연결을 확인해주세요")
-            UserViewModel.shared.userFetch(uid: Auth.auth().currentUser?.uid ?? "")
+            UserViewModel.shared.userFetch()
         }
         firstADListViewModel.ADServiceError.bind { [weak self] error  in
             Toast.message(superView: self!.view, text: "서버연결에 실패했습니다 인터넷 연결을 확인해주세요")
@@ -145,10 +142,10 @@ class TabBarController: UITabBarController {
                 delegate.window?.rootViewController = vc
             }
         } else {
-            UserViewModel.shared.userFetch(uid: Auth.auth().currentUser!.uid)
+            UserViewModel.shared.userFetch()
+            cafeListViewModel.fetchCafe()
             firstADListViewModel.fetchAD(collectionName: "SecondAD")
             secondADListViewModel.fetchAD(collectionName: "FirstAD")
-            cafeListViewModel.fetchCafe()
         }
     }
     

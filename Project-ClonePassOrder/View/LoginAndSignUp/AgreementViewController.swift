@@ -272,7 +272,7 @@ class AgreementViewController: UIViewController {
             SVProgressHUD.SVoff(view: self!.view, button: [self!.nextButton])
             Toast.message(superView: self!.view, text: error.errorMessage)
         }
-        SignUpViewModel.shared.imageURL.bind { _ in
+        SignUpViewModel.shared.imageUploadSuccess.bind { _ in
             SignUpViewModel.shared.signUpUser()
         }
         SignUpViewModel.shared.signUpEnd.bind { [weak self] _ in

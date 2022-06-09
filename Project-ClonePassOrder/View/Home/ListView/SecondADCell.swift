@@ -13,7 +13,6 @@ class SecondADCell: UICollectionViewCell {
     //MARK: - 식별자
     
     static let identifier: String = "SecondADCell"
-    weak var delegate: ListViewCellDelegate?
      var viewModel: ADListViewModel? {
          didSet {
              setAtrribute()
@@ -110,7 +109,7 @@ class SecondADCell: UICollectionViewCell {
             ) { [weak self] result in
                 switch result {
                 case .success(_):
-                    self?.delegate?.imageLoadEnd()
+                    self?.viewModel?.imageLoadEnd.value = true
                 case .failure(_):
                     break
                 }

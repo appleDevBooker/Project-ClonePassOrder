@@ -11,7 +11,7 @@ struct MockUserService: UserServiceProtocol {
     
     var result: Result<UserModel, UserServiceError>?
     
-    func fetch(uid: String, completion: @escaping (Result<UserModel, UserServiceError>) -> Void) {
+    func fetch(completion: @escaping (Result<UserModel, UserServiceError>) -> Void) {
         completion(result!)
     }
     

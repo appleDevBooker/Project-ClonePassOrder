@@ -8,10 +8,6 @@
 import SnapKit
 import UIKit
 
-protocol ListViewCellDelegate: AnyObject {
-    func imageLoadEnd()
-}
-
 class FirstADCell: UICollectionViewCell {
     
     //MARK: - 식별자
@@ -20,20 +16,16 @@ class FirstADCell: UICollectionViewCell {
     
     //MARK: - 프로퍼티
     
-   weak var delegate: ListViewCellDelegate?
     var viewModel: ADListViewModel? {
         didSet {
             addContentScrollView(index: viewModel?.items.value.count ?? 0)
         }
     }
     private var currentPage: CGFloat = 0
-    private var ADUrl = ["첫번째 링크","두번째링크","세번째링크","네번째링크","다섯번째링크"]
     private lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.isPagingEnabled = true
         sv.isScrollEnabled = false
-        let gesutre = UITapGestureRecognizer(target: self, action: #selector(scrollViewTapped))
-        sv.addGestureRecognizer(gesutre)
         return sv
     }()
     
@@ -46,13 +38,6 @@ class FirstADCell: UICollectionViewCell {
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    //MARK: - 셀렉터 메서드
-    
-    @objc func scrollViewTapped() {
-        let currentImageCount = Int(currentPage / self.bounds.width)
-        print(ADUrl[currentImageCount])
     }
     
     //MARK: - 메서드
@@ -81,7 +66,7 @@ class FirstADCell: UICollectionViewCell {
             ) { [weak self] result in
                 switch result {
                 case .success(_):
-                    self?.delegate?.imageLoadEnd()
+                    self!.viewModel?.imageLoadEnd.value = true
                 case .failure(_):
                     break
                 }

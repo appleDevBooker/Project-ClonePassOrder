@@ -8,6 +8,10 @@
 import Foundation
 
 struct AuthModel {
-    let email: String
-    let password: String
+    var email: String
+    var password: String
+}
+
+extension AuthModel {
+    static let EMPTY = AuthModel(email: "", password: "")
 }

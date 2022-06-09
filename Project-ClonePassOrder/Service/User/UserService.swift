@@ -9,16 +9,21 @@ import Foundation
 import Firebase
 
 enum UserServiceError: Error {
+    case currentUserNillError
     case userFetchError
     case snapShotError
 }
 
 protocol UserServiceProtocol {
-    func fetch(uid: String,completion: @escaping (Result<UserModel,UserServiceError>) -> Void)
+    func fetch(completion: @escaping (Result<UserModel,UserServiceError>) -> Void)
 }
 
 struct UserService: UserServiceProtocol {
-    func fetch(uid: String,completion: @escaping (Result<UserModel, UserServiceError>) -> Void) {
+    func fetch(completion: @escaping (Result<UserModel, UserServiceError>) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            completion(.failure(.currentUserNillError))
+            return
+        }
         Firestore.firestore().collection("user").document(uid).getDocument { snapshot, error in
             if error != nil {
                 completion(.failure(.userFetchError))

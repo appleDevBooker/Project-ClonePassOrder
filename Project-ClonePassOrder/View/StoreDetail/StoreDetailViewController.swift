@@ -16,7 +16,7 @@ class StoreDetailViewController: UIViewController {
 
     // MARK: - Properties
     
-    var viewModel: CafeViewModelItem
+    var viewModel: CafeListViewModelItem
     var currentSelectedView: SelectedView = .infoView
 
     // MARK: - UI Properties
@@ -43,7 +43,7 @@ class StoreDetailViewController: UIViewController {
 
     // MARK: - viewLifeCycle
     
-    init(viewModel: CafeViewModelItem) {
+    init(viewModel: CafeListViewModelItem) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

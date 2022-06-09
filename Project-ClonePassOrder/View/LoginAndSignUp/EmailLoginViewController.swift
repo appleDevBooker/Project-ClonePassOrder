@@ -6,6 +6,7 @@
 //
 
 import SnapKit
+import Firebase
 import UIKit
 import SVProgressHUD
 
@@ -15,8 +16,14 @@ class EmailLoginViewController: UIViewController {
     
      var authViewModel: AuthViewModel = AuthViewModel()
     private let emailLoginButton: UIButton = UIButton().emailLoginButton()
-    private let emailTextField: UITextField = UITextField().loginTextField(returnKey: .next)
-    private let passwordTextField: UITextField = UITextField().loginTextField(returnKey: .continue)
+    private let emailTextField: UITextField = UITextField().loginTextField(
+        returnKey: .next,
+        serureTextEntry: false
+    )
+    private let passwordTextField: UITextField = UITextField().loginTextField(
+        returnKey: .continue,
+        serureTextEntry: true
+    )
     private let emailLabel: UILabel = UILabel().emailLoginLabel(text: "아이디")
     private let passwordLabel: UILabel = UILabel().emailLoginLabel(text: "비밀번호")
     private let welcomeView: UIView = UIView().welcomeView(text: "이메일로 로그인하기",height: 10)
@@ -35,13 +42,7 @@ class EmailLoginViewController: UIViewController {
     @objc func emailLoginButtonTapped() {
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
-        guard let email = emailTextField.text else {
-            return
-        }
-        guard let password = passwordTextField.text else {
-            return
-        }
-        authViewModel.userLogin(email: email, password: password)
+        authViewModel.userLogin(email: emailTextField.text ?? "", password: passwordTextField.text ?? "")
     }
     
     //MARK: - 메서드
@@ -79,7 +80,6 @@ class EmailLoginViewController: UIViewController {
                                    action: #selector(emailLoginButtonTapped),
                                    for: .touchUpInside)
         emailTextField.becomeFirstResponder()
-        passwordTextField.isSecureTextEntry = true
     }
     private func naviSetAttribute() {
         navigationController?.navigationBar.isHidden = false
@@ -87,24 +87,21 @@ class EmailLoginViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .black
     }
     private func setBind() {
-        authViewModel.textfildEmpty.bind { [weak self] _ in
-            Toast.message(superView: self!.view, text: self!.authViewModel.textFieldEmptyString())
+        authViewModel.textfildEmpty.bind { [weak self] state in
+            Toast.message(superView: self!.view, text: state.emptyMessage)
         }
-        authViewModel.loginStart.bind { [weak self] bool in
-            SVProgressHUD.SVshow(view: self!.view, text: "로그인중입니다...", button: [self!.emailLoginButton])
+        authViewModel.loginStart.bind { [weak self] text in
+            SVProgressHUD.SVshow(view: self!.view, text: text, button: [self!.emailLoginButton])
         }
         authViewModel.authError.bind { [weak self] error in
             Toast.message(superView: self!.view, text: error.errorMessage)
             SVProgressHUD.SVoff(view: self!.view, button: [self!.emailLoginButton])
         }
-        authViewModel.uid.bind { uid in
-            guard let uid = uid else {
-                return
-            }
-            UserViewModel.shared.userFetch(uid: uid)
-        }
-        UserViewModel.shared.model.bind { [weak self] _ in
+        authViewModel.loginSuccess.bind { [weak self] _ in
             SVProgressHUD.SVoff(view: self!.view, button: [self!.emailLoginButton])
+            UserViewModel.shared.userFetch()
+        }
+        UserViewModel.shared.model.bind { _ in
             let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
             guard let delegate = sceneDelegate else {
                 return

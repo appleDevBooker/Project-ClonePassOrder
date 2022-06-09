@@ -9,6 +9,8 @@ import Foundation
 
 //MARK: - List
 
+
+
 final class ADListViewModel {
     
     init(service: ADServiceProtocol = ADService()) {
@@ -16,6 +18,8 @@ final class ADListViewModel {
     }
     
     var adService: ADServiceProtocol
+    
+    var imageLoadEnd: Observer<Bool> = Observer(value: false)
     var items: Observer<[ADViewModelItem]> = Observer(value: [])
     var ADServiceError: Observer<ADServiceError> = Observer(value: .snapShotError)
 }

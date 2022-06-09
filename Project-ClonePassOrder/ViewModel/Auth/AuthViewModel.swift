@@ -8,6 +8,14 @@
 import Foundation
 
 enum EmptyTextField {
+    var emptyMessage: String {
+        switch self {
+        case .emailEmpty:
+            return "아이디를 입력해주세요!"
+        case .passwordEmpty:
+            return "비밀번호를 입력해주세요"
+        }
+    }
     case emailEmpty
     case passwordEmpty
 }
@@ -21,12 +29,13 @@ final class AuthViewModel {
     }
     
     var service: AuthServiceProtocol
-    var email: String?
-    var password: String?
+    
+    var model = AuthModel.EMPTY
+    
     var textfildEmpty: Observer<EmptyTextField> = Observer(value: .emailEmpty)
-    var uid: Observer<String?> = Observer(value: nil)
     var authError: Observer<AuthError> = Observer(value: .loginFaildError)
-    var loginStart: Observer<Bool> = Observer(value: false)
+    var loginStart: Observer<String> = Observer(value: "")
+    var loginSuccess: Observer<Bool> = Observer(value: false)
     var logoutSuccess: Observer<Bool> = Observer(value: false)
 }
 
@@ -38,30 +47,17 @@ extension AuthViewModel {
         } else if password == "" {
             textfildEmpty.value = .passwordEmpty
         } else {
-            self.email = email
-            self.password = password
+            self.model.email = email
+            self.model.password = password
+            loginStart.value = "로딩중입니다..."
             login()
-            loginStart.value = true
-        }
-    }
-    func textFieldEmptyString() -> String {
-        switch textfildEmpty.value {
-        case .emailEmpty:
-            return "아이디를 입력해주세요!"
-        case .passwordEmpty:
-            return "비빌번호를 입력해주세요!"
         }
     }
     func login() {
-        guard let email = email,
-            let password = password else {
-            return
-        }
-        let model = AuthModel(email: email, password: password)
         service.login(model: model) { [weak self] result in
             switch result {
-            case .success(let uid):
-                self?.uid.value = uid
+            case .success():
+                self?.loginSuccess.value = true
             case .failure(let error):
                 self?.authError.value = error
             }

@@ -8,7 +8,7 @@
 import XCTest
 import CoreLocation
 
-class CafeUnitTest: XCTestCase {
+class CafeListUnitTest: XCTestCase {
     
     var coordinate2D: CLLocationCoordinate2D!
     var coordinate: CLLocation!
